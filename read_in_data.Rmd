@@ -10,7 +10,7 @@ library(wrMisc)
 library(dplyr)
 ```
 
-```{r read_in}
+```{r old}
 corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt")))
 
 chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt", encoding = "UTF-8")
@@ -33,7 +33,7 @@ word_freq2 <- colSums(as.matrix(dtm2))
 
 ```
 
-```{r combine_all}
+```{r old2}
 
 word.list <- split(unname(word_freq),names(word_freq))
 
@@ -47,7 +47,7 @@ freq_all <- my_list %>% replace(is.na(.), 0)
 
 ```
 
-```{r}
+```{r old3}
 temp <- rbind.fill.matrix(t(word_freq), t(word_freq2))
 temp[is.na(temp)] <- 0
 temp
@@ -62,7 +62,7 @@ freq_all <- my_list %>% replace(is.na(.), 0)
 
 ```
 
-```{r}
+```{r read_in_frequencies}
 #List out all files in folder
 
 list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4", recursive = TRUE,
@@ -94,7 +94,7 @@ total_list <- list(word_freq)
 
 
 #Do the same for other files
-for(jj in 2: num_files){
+for(jj in 2:num_files) {
   
   #Read in jj file
   corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
@@ -108,39 +108,53 @@ for(jj in 2: num_files){
   word_freq2 <- colSums(as.matrix(dtm2))
   
   #Combine
-  total_list <- append(total_list, word_freq2)
+  total_list[[jj]] <- word_freq2
   
 }
 
 
 #Extract all names
 all_names <- names(unlist(total_list[1]))
-for(ii in 2: num_files){ 
-  cur_name<- names(unlist(total_list[ii]))
-  all_names <- union (all_names, cur_name)}
+for(ii in 2:num_files) { 
+  cur_name <- names(unlist(total_list[ii]))
+  all_names <- union(all_names, cur_name)}
 
 # Initialize an empty matrix with column names
 combined_matrix <- matrix(0, nrow = 0, ncol = length(all_names))
 colnames(combined_matrix) <- sort(all_names)
 
-
 # Iteratively combine vectors into the matrix
-for (vec in vectors) {
+for (vec in total_list) {
   combined_names <- union(colnames(combined_matrix), names(vec))
   combined_matrix <- rbind(combined_matrix, vec[combined_names])
 }
 
+
+
 # Fill missing values with 0
 combined_matrix[is.na(combined_matrix)] <- 0
 
-# Print the combined matrix with original column names
-print(combined_matrix)
 
+
+# Remove English
+cleaned_freq <- combined_matrix[, 8:length(all_names)]
+```
+
+```{r}
+# Resulting Matrix preview
+print(cleaned_freq[1:10, 1:10])
+```
+
+```{r }
+# Next, I want to extract the core words only
 ```
 
 
 
-```{r}
+```{r sample}
+#Sample from chatgpt; does not work, but my solution is modeled after this
+
+
 # Sample named vectors
 vec1 <- c(A=1, B=2, C=3)
 vec2 <- c(B=4, D=5)
@@ -176,7 +190,9 @@ print(combined_matrix)
 
 ```
 
-```{r}
+```{r sample2}
+#Sample from chatgpt; does not work, but my solution is modeled after this
+
 # Sample named vectors
 vec1 <- c(A=1, B=2, C=3)
 vec2 <- c(B=4, D=5)
