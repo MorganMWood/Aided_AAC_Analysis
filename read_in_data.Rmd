@@ -1,0 +1,207 @@
+---
+title: "Aided"
+output: html_notebook
+---
+
+
+```{r setup}
+library(tm)
+library(wrMisc)
+library(dplyr)
+```
+
+```{r read_in}
+corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt")))
+
+chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt", encoding = "UTF-8")
+
+corpus <- tm_map(corpus, content_transformer(tolower))
+
+dtm <- DocumentTermMatrix(corpus)
+
+word_freq <- colSums(as.matrix(dtm))
+
+corpus2 <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4102.txt")))
+
+chinese_text2 <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4102.txt", encoding = "UTF-8")
+
+corpus2 <- tm_map(corpus2, content_transformer(tolower))
+
+dtm2 <- DocumentTermMatrix(corpus2)
+
+word_freq2 <- colSums(as.matrix(dtm2))
+
+```
+
+```{r combine_all}
+
+word.list <- split(unname(word_freq),names(word_freq))
+
+word.list2 <- split(unname(word_freq2),names(word_freq2))
+
+my_list <- list(word.list, word.list2)
+
+rbindlist(my_list, fill=TRUE)
+
+freq_all <- my_list %>% replace(is.na(.), 0)
+
+```
+
+```{r}
+temp <- rbind.fill.matrix(t(word_freq), t(word_freq2))
+temp[is.na(temp)] <- 0
+temp
+
+```
+
+```{r combine_all}
+
+my_list <- mergeVectors(word_freq, word_freq2)
+
+freq_all <- my_list %>% replace(is.na(.), 0)
+
+```
+
+```{r}
+#List out all files in folder
+
+list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4", recursive = TRUE,
+                            pattern = "\\.txt$", 
+                            full.names = TRUE)
+
+
+
+#Total number of files
+
+num_files <- length(list_of_files)
+
+
+
+#First file in Folder: Create a named vector of frequencies
+
+corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt")))
+
+chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt", encoding = "UTF-8")
+
+corpus <- tm_map(corpus, content_transformer(tolower))
+
+dtm <- DocumentTermMatrix(corpus)
+
+word_freq <- colSums(as.matrix(dtm))
+
+total_list <- list(word_freq)
+
+
+
+#Do the same for other files
+for(jj in 2: num_files){
+  
+  #Read in jj file
+  corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+
+  chinese_text2 <- readLines(list_of_files[jj], encoding = "UTF-8")
+
+  corpus2 <- tm_map(corpus2, content_transformer(tolower))
+
+  dtm2 <- DocumentTermMatrix(corpus2)
+
+  word_freq2 <- colSums(as.matrix(dtm2))
+  
+  #Combine
+  total_list <- append(total_list, word_freq2)
+  
+}
+
+
+#Extract all names
+all_names <- names(unlist(total_list[1]))
+for(ii in 2: num_files){ 
+  cur_name<- names(unlist(total_list[ii]))
+  all_names <- union (all_names, cur_name)}
+
+# Initialize an empty matrix with column names
+combined_matrix <- matrix(0, nrow = 0, ncol = length(all_names))
+colnames(combined_matrix) <- sort(all_names)
+
+
+# Iteratively combine vectors into the matrix
+for (vec in vectors) {
+  combined_names <- union(colnames(combined_matrix), names(vec))
+  combined_matrix <- rbind(combined_matrix, vec[combined_names])
+}
+
+# Fill missing values with 0
+combined_matrix[is.na(combined_matrix)] <- 0
+
+# Print the combined matrix with original column names
+print(combined_matrix)
+
+```
+
+
+
+```{r}
+# Sample named vectors
+vec1 <- c(A=1, B=2, C=3)
+vec2 <- c(B=4, D=5)
+vec3 <- c(A=6, C=7, E=8)
+vec4 <- c(B=9, C=10, D=11)
+
+# List of vectors
+vectors <- list(vec1, vec2, vec3, vec4)
+
+#Extract all names
+all_names <- names(unlist(vectors[1]))
+for(ii in 2: length(vectors)){ 
+  cur_name<- names(unlist(vectors[ii]))
+  all_names <- union (all_names, cur_name)}
+
+# Initialize an empty matrix with column names
+combined_matrix <- matrix(0, nrow = 0, ncol = length(all_names))
+colnames(combined_matrix) <- sort(all_names)
+
+
+# Iteratively combine vectors into the matrix
+for (vec in vectors) {
+  combined_names <- union(colnames(combined_matrix), names(vec))
+  combined_matrix <- rbind(combined_matrix, vec[combined_names])
+}
+
+# Fill missing values with 0
+combined_matrix[is.na(combined_matrix)] <- 0
+
+# Print the combined matrix with original column names
+print(combined_matrix)
+
+
+```
+
+```{r}
+# Sample named vectors
+vec1 <- c(A=1, B=2, C=3)
+vec2 <- c(B=4, D=5)
+vec3 <- c(A=6, C=7, E=8)
+vec4 <- c(B=9, C=10, D=11)
+
+# List of vectors
+vectors <- list(vec1, vec2, vec3, vec4)
+
+# Initialize an empty matrix
+combined_matrix <- matrix(0, nrow = 0, ncol = 0)
+col_names <- character(0)
+
+# Iteratively combine vectors into the matrix
+for (vec in vectors) {
+  combined_names <- unique(c(col_names, names(vec)))
+  combined_matrix <- cbind(combined_matrix, matrix(0, ncol = length(combined_names)))
+  colnames(combined_matrix) <- combined_names
+  combined_matrix <- rbind(combined_matrix, vec[combined_names])
+  col_names <- combined_names
+}
+
+# Fill missing values with 0
+combined_matrix[is.na(combined_matrix)] <- 0
+
+# Print the combined matrix with original column names
+print(combined_matrix)
+```
