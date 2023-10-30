@@ -94,7 +94,7 @@ total_list <- list(word_freq)
 
 
 #Do the same for other files
-for(jj in 2:num_files) {
+for (jj in 2:num_files) {
   
   #Read in jj file
   corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
@@ -115,7 +115,7 @@ for(jj in 2:num_files) {
 
 #Extract all names
 all_names <- names(unlist(total_list[1]))
-for(ii in 2:num_files) { 
+for (ii in 2:num_files) { 
   cur_name <- names(unlist(total_list[ii]))
   all_names <- union(all_names, cur_name)}
 
@@ -137,7 +137,7 @@ combined_matrix[is.na(combined_matrix)] <- 0
 
 
 # Remove English
-cleaned_freq <- combined_matrix[, 8:length(all_names)]
+cleaned_freq_4 <- combined_matrix[, 8:length(all_names)]
 ```
 
 ```{r}

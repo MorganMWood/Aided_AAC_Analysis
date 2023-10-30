@@ -1,0 +1,83 @@
+---
+title: "Read in Data"
+output: html_notebook
+---
+
+```{r}
+#List out all files in folder
+
+list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4", recursive = TRUE,
+                            pattern = "\\.txt$", 
+                            full.names = TRUE)
+
+
+
+#Total number of files
+
+num_files <- length(list_of_files)
+
+
+
+#First file in Folder: Create a named vector of frequencies
+
+corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt")))
+
+chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4/T4101.txt", encoding = "UTF-8")
+
+corpus <- tm_map(corpus, content_transformer(tolower))
+
+dtm <- DocumentTermMatrix(corpus)
+
+word_freq <- colSums(as.matrix(dtm))
+
+total_list <- list(word_freq)
+
+
+
+#Do the same for other files
+for (jj in 2:num_files) {
+  
+  #Read in jj file
+  corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+
+  chinese_text2 <- readLines(list_of_files[jj], encoding = "UTF-8")
+
+  corpus2 <- tm_map(corpus2, content_transformer(tolower))
+
+  dtm2 <- DocumentTermMatrix(corpus2)
+
+  word_freq2 <- colSums(as.matrix(dtm2))
+  
+  #Combine
+  total_list[[jj]] <- word_freq2
+  
+}
+
+
+#Extract all names
+all_names <- names(unlist(total_list[1]))
+for (ii in 2:num_files) { 
+  cur_name <- names(unlist(total_list[ii]))
+  all_names <- union(all_names, cur_name)}
+
+# Initialize an empty matrix with column names
+combined_matrix <- matrix(0, nrow = 0, ncol = length(all_names))
+colnames(combined_matrix) <- sort(all_names)
+
+# Iteratively combine vectors into the matrix
+for (vec in total_list) {
+  combined_names <- union(colnames(combined_matrix), names(vec))
+  combined_matrix <- rbind(combined_matrix, vec[combined_names])
+}
+
+
+
+# Fill missing values with 0
+combined_matrix[is.na(combined_matrix)] <- 0
+
+
+
+# Remove English
+cleaned_freq_4 <- combined_matrix[, 8:length(all_names)]
+```
+
