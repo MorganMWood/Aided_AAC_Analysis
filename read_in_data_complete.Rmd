@@ -3,7 +3,7 @@ title: "Read in Data"
 output: html_notebook
 ---
 
-```{r}
+```{r 4yr}
 #List out all files in folder
 
 list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T4", recursive = TRUE,
@@ -77,7 +77,298 @@ combined_matrix[is.na(combined_matrix)] <- 0
 
 
 
-# Remove English
-cleaned_freq_4 <- combined_matrix[, 8:length(all_names)]
+# Remove English (decided to leave in)
+cleaned_freq_4 <- combined_matrix
 ```
+
+```{r 5yr}
+#List out all files in folder
+
+list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T5", recursive = TRUE,
+                            pattern = "\\.txt$", 
+                            full.names = TRUE)
+
+#Some files are corrupted
+list_of_files <- list_of_files[-c(8, 12, 24, 25, 43, 53)]
+
+
+#Total number of files
+
+num_files <- length(list_of_files)
+
+
+
+#First file in Folder: Create a named vector of frequencies
+
+corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T5/T5101.txt")))
+
+chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T5/T5101.txt", encoding = "UTF-8")
+
+corpus <- tm_map(corpus, content_transformer(tolower))
+
+dtm <- DocumentTermMatrix(corpus)
+
+word_freq <- colSums(as.matrix(dtm))
+
+total_list <- list(word_freq)
+
+
+
+#Do the same for other files
+for (jj in 2:num_files) {
+  
+  #Read in jj file
+  corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+
+  chinese_text2 <- readLines(list_of_files[jj], encoding = "UTF-8")
+
+  corpus2 <- tm_map(corpus2, content_transformer(tolower))
+
+  dtm2 <- DocumentTermMatrix(corpus2)
+
+  word_freq2 <- colSums(as.matrix(dtm2))
+  
+  #Combine
+  total_list[[jj]] <- word_freq2
+  
+}
+
+
+#Extract all names
+all_names <- names(unlist(total_list[1]))
+for (ii in 2:num_files) { 
+  cur_name <- names(unlist(total_list[ii]))
+  all_names <- union(all_names, cur_name)}
+
+# Initialize an empty matrix with column names
+combined_matrix <- matrix(0, nrow = 0, ncol = length(all_names))
+colnames(combined_matrix) <- sort(all_names)
+
+# Iteratively combine vectors into the matrix
+for (vec in total_list) {
+  combined_names <- union(colnames(combined_matrix), names(vec))
+  combined_matrix <- rbind(combined_matrix, vec[combined_names])
+}
+
+
+
+# Fill missing values with 0
+combined_matrix[is.na(combined_matrix)] <- 0
+
+
+
+# Remove English (decided to leave in)
+cleaned_freq_5 <- combined_matrix
+```
+
+```{r}
+#List out all files in folder
+
+list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T6", recursive = TRUE,
+                            pattern = "\\.txt$", 
+                            full.names = TRUE)
+
+
+
+#Total number of files
+
+num_files <- length(list_of_files)
+
+
+
+#First file in Folder: Create a named vector of frequencies
+
+corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T6/T6101.txt")))
+
+chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T6/T6101.txt", encoding = "UTF-8")
+
+corpus <- tm_map(corpus, content_transformer(tolower))
+
+dtm <- DocumentTermMatrix(corpus)
+
+word_freq <- colSums(as.matrix(dtm))
+
+total_list <- list(word_freq)
+
+
+
+#Do the same for other files
+for (jj in 2:num_files) {
+  
+  #Read in jj file
+  corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+
+  chinese_text2 <- readLines(list_of_files[jj], encoding = "UTF-8")
+
+  corpus2 <- tm_map(corpus2, content_transformer(tolower))
+
+  dtm2 <- DocumentTermMatrix(corpus2)
+
+  word_freq2 <- colSums(as.matrix(dtm2))
+  
+  #Combine
+  total_list[[jj]] <- word_freq2
+  
+}
+
+
+#Extract all names
+all_names <- names(unlist(total_list[1]))
+for (ii in 2:num_files) { 
+  cur_name <- names(unlist(total_list[ii]))
+  all_names <- union(all_names, cur_name)}
+
+# Initialize an empty matrix with column names
+combined_matrix <- matrix(0, nrow = 0, ncol = length(all_names))
+colnames(combined_matrix) <- sort(all_names)
+
+# Iteratively combine vectors into the matrix
+for (vec in total_list) {
+  combined_names <- union(colnames(combined_matrix), names(vec))
+  combined_matrix <- rbind(combined_matrix, vec[combined_names])
+}
+
+
+
+# Fill missing values with 0
+combined_matrix[is.na(combined_matrix)] <- 0
+
+
+
+# Remove English (decided to leave in)
+cleaned_freq_6 <- combined_matrix
+```
+
+```{r}
+# Resulting Matrix preview
+print(cleaned_freq_4[1:10, 1:5])
+print(cleaned_freq_5[1:10, 1:5])
+print(cleaned_freq_6[1:10, 1:5])
+```
+
+```{r 4yr core words}
+#Level of frequency and commonality
+freq_level <- .0005
+common_level <- .3
+
+#Number of 4 year olds
+num_4 <- length(cleaned_freq_4[ ,1])
+
+#Number of total words
+total_words_4 <- sum(colSums(cleaned_freq_4))
+
+#Frequent words only
+freq_words_4 <- cleaned_freq_4[ , colSums(cleaned_freq_4) > (sum(colSums(cleaned_freq_4))*freq_level)]
+
+#Common words only
+common_words_4 <- cleaned_freq_4[ , colSums(1*(cleaned_freq_4 > 0)) > (num_4*common_level)]
+
+#Frequent and common words only (Core words)
+core_words_4 <- cleaned_freq_4[ , (colSums(1*(cleaned_freq_4 > 0)) > (num_4*common_level)) & (colSums(cleaned_freq_4) > (sum(colSums(cleaned_freq_4))*freq_level))]
+
+#Turn core words into a dataframe including commonality and frequency
+core_words_4_chart <- data.frame('Composite frequency' = colSums(core_words_4), 'Commonality' = colSums(1*(core_words_4 > 0))/num_4)
+
+#Order by frequency
+ordered_core_words_4 <- core_words_4_chart[order(core_words_4_chart[ ,1], decreasing = TRUE), ]
+
+```
+
+```{r 5yr core words}
+#Level of frequency and commonality
+freq_level <- .0005
+common_level <- .3
+
+#Number of 5 year olds
+num_5 <- length(cleaned_freq_5[ ,1])
+
+#Number of total words
+total_words_5 <- sum(colSums(cleaned_freq_5))
+
+#Frequent words only
+freq_words_5 <- cleaned_freq_5[ , colSums(cleaned_freq_5) > (sum(colSums(cleaned_freq_5))*freq_level)]
+
+#Common words only
+common_words_5 <- cleaned_freq_5[ , colSums(1*(cleaned_freq_5 > 0)) > (num_5*common_level)]
+
+#Frequent and common words only (Core words)
+core_words_5 <- cleaned_freq_5[ , (colSums(1*(cleaned_freq_5 > 0)) > (num_5*common_level)) & (colSums(cleaned_freq_5) > (sum(colSums(cleaned_freq_5))*freq_level))]
+
+#Turn core words into a dataframe including commonality and frequency
+core_words_5_chart <- data.frame('Composite frequency' = colSums(core_words_5), 'Commonality' = colSums(1*(core_words_5 > 0))/num_5)
+
+#Order by frequency
+ordered_core_words_5 <- core_words_5_chart[order(core_words_5_chart[ ,1], decreasing = TRUE), ]
+
+```
+
+
+```{r 6yr core words}
+#Level of frequency and commonality
+freq_level <- .0005
+common_level <- .3
+
+#Number of 6 year olds
+num_6 <- length(cleaned_freq_6[ ,1])
+
+#Number of total words
+total_words_6 <- sum(colSums(cleaned_freq_6))
+
+#Frequent words only
+freq_words_6 <- cleaned_freq_6[ , colSums(cleaned_freq_6) > (sum(colSums(cleaned_freq_6))*freq_level)]
+
+#Common words only
+common_words_6 <- cleaned_freq_6[ , colSums(1*(cleaned_freq_6 > 0)) > (num_6*common_level)]
+
+#Frequent and common words only (Core words)
+core_words_6 <- cleaned_freq_6[ , (colSums(1*(cleaned_freq_6 > 0)) > (num_6*common_level)) & (colSums(cleaned_freq_6) > (sum(colSums(cleaned_freq_6))*freq_level))]
+
+#Turn core words into a dataframe including commonality and frequency
+core_words_6_chart <- data.frame('Composite frequency' = colSums(core_words_6), 'Commonality' = colSums(1*(core_words_6 > 0))/num_6)
+
+#Order by frequency
+ordered_core_words_6 <- core_words_6_chart[order(core_words_6_chart[ ,1], decreasing = TRUE), ]
+
+```
+
+```{r all years core words}
+#Level of frequency and commonality
+freq_level <- .0005
+common_level <- .3
+
+#Number of children
+num <- length(cleaned_freq_6[ ,1])
+
+#Number of total words
+total_words_6 <- sum(colSums(cleaned_freq_6))
+
+#Frequent words only
+freq_words_6 <- cleaned_freq_6[ , colSums(cleaned_freq_6) > (sum(colSums(cleaned_freq_6))*freq_level)]
+
+#Common words only
+common_words_6 <- cleaned_freq_6[ , colSums(1*(cleaned_freq_6 > 0)) > (num_6*common_level)]
+
+#Frequent and common words only (Core words)
+core_words_6 <- cleaned_freq_6[ , (colSums(1*(cleaned_freq_6 > 0)) > (num_6*common_level)) & (colSums(cleaned_freq_6) > (sum(colSums(cleaned_freq_6))*freq_level))]
+
+#Turn core words into a dataframe including commonality and frequency
+core_words_6_chart <- data.frame('Composite frequency' = colSums(core_words_6), 'Commonality' = colSums(1*(core_words_6 > 0))/num_6)
+
+#Order by frequency
+ordered_core_words_6 <- core_words_6_chart[order(core_words_6_chart[ ,1], decreasing = TRUE), ]
+
+```
+
+```{r}
+#Print out core words
+print(ordered_core_words_4)
+print(total_words_4)
+
+print(ordered_core_words_5)
+print(total_words_5)
+
+print(ordered_core_words_6)
+print(total_words_6)
+```
+
 
