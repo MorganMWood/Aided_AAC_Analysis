@@ -142,7 +142,7 @@ cleaned_freq_4 <- combined_matrix[, 8:length(all_names)]
 
 ```{r}
 # Resulting Matrix preview
-print(cleaned_freq[1:10, 1:10])
+print(cleaned_freq_4[1:10, 1:10])
 ```
 
 ```{r }
