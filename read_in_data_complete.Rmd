@@ -9,7 +9,6 @@ library(tm)
 #library(dplyr)
 library(gt) #for nice tables
 
-knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
 ```
 
 
@@ -94,9 +93,9 @@ cleaned_freq_4 <- combined_matrix
 ```{r 5yr}
 #List out all files in folder
 
-list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T5", recursive = TRUE,
-                            pattern = "\\.txt$", 
-                            full.names = TRUE)
+list_of_files <- list.files(path = "~/2023 Fall/Consulting class/Aided_AAC_Analysis/T5", recursive = TRUE, pattern = "\\.txt$", full.names = TRUE)
+
+#list_of_files <- list.files(path = "https://github.com/smithmor/Aided_AAC_Analysis/tree/d4fb6eef656216d377994c076bd1ecb0278df3c5/T5", recursive = TRUE, pattern = "\\.txt$", full.names = TRUE)
 
 #Some files are corrupted
 list_of_files <- list_of_files[-c(8, 12, 24, 25, 43, 53)]
@@ -110,11 +109,23 @@ num_files <- length(list_of_files)
 
 #First file in Folder: Create a named vector of frequencies
 
+#corpus <- Corpus(VectorSource(readLines("https://github.com/smithmor/Aided_AAC_Analysis/blob/d4fb6eef656216d377994c076bd1ecb0278df3c5/T5/T5101.txt")))
+
+#chinese_text <- readLines("https://github.com/smithmor/Aided_AAC_Analysis/tree/d4fb6eef656216d377994c076bd1ecb0278df3c5/T5/T5101.txt", encoding = "UTF-8")
+
 corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T5/T5101.txt")))
 
 chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T5/T5101.txt", encoding = "UTF-8")
 
+chinese_text <- chartr("　", " ", chinese_text)
+
 corpus <- tm_map(corpus, content_transformer(tolower))
+
+# Create a custom word tokenizer to split by both space and Unicode 3000
+#custom_tokenizer <- function(x) unlist(strsplit(x, split = "[[:space:]]|[\u3000]"))
+
+# Use the custom tokenizer when creating the Document-Term Matrix
+#dtm <- DocumentTermMatrix(corpus, control = list(tokenize = custom_tokenizer))
 
 dtm <- DocumentTermMatrix(corpus)
 
@@ -128,11 +139,21 @@ total_list <- list(word_freq)
 for (jj in 2:num_files) {
   
   #Read in jj file
-  corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+  #corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+  
+  corpus2 <- Corpus(VectorSource(chartr("　", " ", readLines(list_of_files[jj]))))
 
   chinese_text2 <- readLines(list_of_files[jj], encoding = "UTF-8")
+  
+  chinese_text2 <- chartr("　", " ", chinese_text2)
 
   corpus2 <- tm_map(corpus2, content_transformer(tolower))
+  
+  # Create a custom word tokenizer to split by both space and Unicode 3000
+  #custom_tokenizer <- function(x) unlist(strsplit(x, split = "[[:space:]]|[\u3000]"))
+
+  # Use the custom tokenizer when creating the Document-Term Matrix
+  #dtm2 <- DocumentTermMatrix(corpus2, control = list(tokenize = custom_tokenizer))
 
   dtm2 <- DocumentTermMatrix(corpus2)
 
@@ -187,9 +208,11 @@ num_files <- length(list_of_files)
 
 #First file in Folder: Create a named vector of frequencies
 
-corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T6/T6101.txt")))
+corpus <- Corpus(VectorSource(chartr("　", " ", readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T6/T6101.txt"))))
 
 chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/T6/T6101.txt", encoding = "UTF-8")
+
+chinese_text <- chartr("　", " ", chinese_text)
 
 corpus <- tm_map(corpus, content_transformer(tolower))
 
@@ -205,9 +228,11 @@ total_list <- list(word_freq)
 for (jj in 2:num_files) {
   
   #Read in jj file
-  corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+  corpus2 <- Corpus(VectorSource(chartr("　", " ", readLines(list_of_files[jj]))))
 
   chinese_text2 <- readLines(list_of_files[jj], encoding = "UTF-8")
+  
+  chinese_text2 <- chartr("　", " ", chinese_text2)
 
   corpus2 <- tm_map(corpus2, content_transformer(tolower))
 
@@ -270,9 +295,11 @@ num_files <- length(list_of_files)
 
 #First file in Folder: Create a named vector of frequencies
 
-corpus <- Corpus(VectorSource(readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/all/T4101.txt")))
+corpus <- Corpus(VectorSource(chartr("　", " ", readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/all/T4101.txt"))))
 
 chinese_text <- readLines("~/2023 Fall/Consulting class/Aided_AAC_Analysis/all/T4101.txt", encoding = "UTF-8")
+
+chinese_text <- chartr("　", " ", chinese_text)
 
 corpus <- tm_map(corpus, content_transformer(tolower))
 
@@ -288,9 +315,11 @@ total_list <- list(word_freq)
 for (jj in 2:num_files) {
   
   #Read in jj file
-  corpus2 <- Corpus(VectorSource(readLines(list_of_files[jj])))
+  corpus2 <- Corpus(VectorSource(chartr("　", " ", readLines(list_of_files[jj]))))
 
   chinese_text2 <- readLines(list_of_files[jj], encoding = "UTF-8")
+  
+  chinese_text2 <- chartr("　", " ", chinese_text2)
 
   corpus2 <- tm_map(corpus2, content_transformer(tolower))
 
@@ -495,5 +524,26 @@ length(ordered_core_words_all[ , 1])
 plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
 
 plot(ordered_core_words_4$Commonality, ordered_core_words_4$Composite.frequency)
+```
+
+
+```{r}
+#Lower bound on frequency
+
+#commonality considering
+common_level <- .3
+
+#Frequency required
+num_4*common_level
+num_5*common_level
+num_6*common_level
+num_all*common_level
+
+#Relative frequency required per 1000 words
+num_4*common_level/total_words_4*1000
+num_5*common_level/total_words_5*1000
+num_6*common_level/total_words_6*1000
+num_all*common_level/total_words_all*1000
+
 ```
 
