@@ -3,6 +3,16 @@ title: "Read in Data"
 output: html_notebook
 ---
 
+```{r setup, include=FALSE}
+library(tm)
+#library(wrMisc)
+#library(dplyr)
+library(gt) #for nice tables
+
+knitr::opts_chunk$set(warning = FALSE, message = FALSE) 
+```
+
+
 ```{r 4yr}
 #List out all files in folder
 
@@ -350,7 +360,7 @@ common_words_4 <- cleaned_freq_4[ , colSums(1*(cleaned_freq_4 > 0)) > (num_4*com
 core_words_4 <- cleaned_freq_4[ , (colSums(1*(cleaned_freq_4 > 0)) > (num_4*common_level)) & (colSums(cleaned_freq_4) > (sum(colSums(cleaned_freq_4))*freq_level))]
 
 #Turn core words into a dataframe including commonality and frequency
-core_words_4_chart <- data.frame('Composite frequency' = colSums(core_words_4), 'Commonality' = colSums(1*(core_words_4 > 0))/num_4)
+core_words_4_chart <- data.frame('Composite frequency' = colSums(core_words_4), 'Relative frequency per 1000 words' =  colSums(core_words_4)/total_words_4*1000, 'Commonality' = colSums(1*(core_words_4 > 0))/num_4)
 
 #Order by frequency
 ordered_core_words_4 <- core_words_4_chart[order(core_words_4_chart[ ,1], decreasing = TRUE), ]
@@ -378,7 +388,7 @@ common_words_5 <- cleaned_freq_5[ , colSums(1*(cleaned_freq_5 > 0)) > (num_5*com
 core_words_5 <- cleaned_freq_5[ , (colSums(1*(cleaned_freq_5 > 0)) > (num_5*common_level)) & (colSums(cleaned_freq_5) > (sum(colSums(cleaned_freq_5))*freq_level))]
 
 #Turn core words into a dataframe including commonality and frequency
-core_words_5_chart <- data.frame('Composite frequency' = colSums(core_words_5), 'Commonality' = colSums(1*(core_words_5 > 0))/num_5)
+core_words_5_chart <- data.frame('Composite frequency' = colSums(core_words_5), 'Relative frequency per 1000 words' =  colSums(core_words_5)/total_words_5*1000, 'Commonality' = colSums(1*(core_words_5 > 0))/num_5)
 
 #Order by frequency
 ordered_core_words_5 <- core_words_5_chart[order(core_words_5_chart[ ,1], decreasing = TRUE), ]
@@ -407,7 +417,7 @@ common_words_6 <- cleaned_freq_6[ , colSums(1*(cleaned_freq_6 > 0)) > (num_6*com
 core_words_6 <- cleaned_freq_6[ , (colSums(1*(cleaned_freq_6 > 0)) > (num_6*common_level)) & (colSums(cleaned_freq_6) > (sum(colSums(cleaned_freq_6))*freq_level))]
 
 #Turn core words into a dataframe including commonality and frequency
-core_words_6_chart <- data.frame('Composite frequency' = colSums(core_words_6), 'Commonality' = colSums(1*(core_words_6 > 0))/num_6)
+core_words_6_chart <- data.frame('Composite frequency' = colSums(core_words_6), 'Relative frequency per 1000 words' =  colSums(core_words_6)/total_words_6*1000, 'Commonality' = colSums(1*(core_words_6 > 0))/num_6)
 
 #Order by frequency
 ordered_core_words_6 <- core_words_6_chart[order(core_words_6_chart[ ,1], decreasing = TRUE), ]
@@ -435,7 +445,7 @@ common_words_all <- cleaned_freq_all[ , colSums(1*(cleaned_freq_all > 0)) > (num
 core_words_all <- cleaned_freq_all[ , (colSums(1*(cleaned_freq_all > 0)) > (num_all*common_level)) & (colSums(cleaned_freq_all) > (sum(colSums(cleaned_freq_all))*freq_level))]
 
 #Turn core words into a dataframe including commonality and frequency
-core_words_all_chart <- data.frame('Composite frequency' = colSums(core_words_all), 'Commonality' = colSums(1*(core_words_all > 0))/num_all)
+core_words_all_chart <- data.frame('Composite frequency' = colSums(core_words_all), 'Relative frequency per 1000 words' =  colSums(core_words_all)/total_words_all*1000, 'Commonality' = colSums(1*(core_words_all > 0))/num_all)
 
 #Order by frequency
 ordered_core_words_all <- core_words_all_chart[order(core_words_all_chart[ ,1], decreasing = TRUE), ]
@@ -457,7 +467,33 @@ print(ordered_core_words_all)
 print(total_words_all)
 ```
 
+```{r}
+gt4 <- gt(ordered_core_words_4, rownames_to_stub = TRUE)
+tab_header(gt4, title = "Core Words for 4-Year-Olds")
+
+gt5 <- gt(ordered_core_words_5, rownames_to_stub = TRUE)
+tab_header(gt5, title = "Core Words for 5-Year-Olds")
+
+gt6 <- gt(ordered_core_words_6, rownames_to_stub = TRUE)
+tab_header(gt6, title = "Core Words for 6-Year-Olds")
+
+gtall <- gt(ordered_core_words_all, rownames_to_stub = TRUE)
+tab_header(gtall, title = "Core Words Across All Ages")
+
+```
+
+```{r}
+#Number of core words
+length(ordered_core_words_4[ , 1])
+length(ordered_core_words_5[ , 1])
+length(ordered_core_words_6[ , 1])
+length(ordered_core_words_all[ , 1])
+
+```
+
 ```{r scatterplot}
 plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
+
+plot(ordered_core_words_4$Commonality, ordered_core_words_4$Composite.frequency)
 ```
 
