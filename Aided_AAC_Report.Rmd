@@ -530,7 +530,7 @@ Regardless of this, for the remainder of this report I continue with the commona
 
 # Core Words
 
-Below, I give a table that previews the first 6 core words for children in the combined group. The core words listed below are in order of decreasing frequency. In total, there were `r length(ordered_core_words_all[ , 1])` core words identified. The complete list of core words can be found on GitHub in the excel file "core_words_processed.xlsx"^[link] under the "Core Words for Combined Group" tab.
+Below, I give a table that previews the first 6 core words for children in the combined group. The core words listed below are in order of decreasing frequency. In total, there were `r length(ordered_core_words_all[ , 1])` core words identified. The complete list of core words can be found on GitHub in the excel file "core_words_processed.xlsx"^[Link: https://github.com/smithmor/Aided_AAC_Analysis/blob/7cab44371c38a43652a1a81eacb7862b4a6128c9/core_words_processed.xlsx] under the "Core Words for Combined Group" tab.
 
 ```{r, echo=FALSE}
 gtall <- gt(round(ordered_core_words_all[1:6, ], digits = 2), rownames_to_stub = TRUE)
@@ -590,7 +590,7 @@ Alternatively, a smoothed scatterplot is also presented in the Appendix.
 
 # Core Words Between Different Age Groups
 
-Next, we look to see if the commonality of possible core words change between different age groups. To do this, we consider all words that are determined to be a core word in the 4-year-old, 5-year-old, or 6-year-old group. Below is a preview of a chart which catalogs the groups in which each word is classified as a core word. 
+Next, we look to see if the commonality of possible core words change between different age groups. To do this, we consider all words that are determined to be a core word in the 4-year-old, 5-year-old, or 6-year-old group. Below is a preview of a chart which catalogs the groups in which each word is classified as a core word. The complete charts can be found in the excel file "core_words_processed.xlsx" under the "Core Words Comparison" tab.
 
 ```{r, include=FALSE}
 #Creating a table with notice of core words & commonality for later
