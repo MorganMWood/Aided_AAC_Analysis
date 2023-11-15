@@ -526,6 +526,123 @@ plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.freque
 plot(ordered_core_words_4$Commonality, ordered_core_words_4$Composite.frequency)
 ```
 
+```{r}
+#Smoothing the scatterplot
+
+#Averaging
+averaged_common <- aggregate(Composite.frequency~Commonality, data = ordered_core_words_all, FUN = mean) 
+#ordered_averaged_common <- averaged_common[order(averaged_common[ ,2], decreasing = TRUE), ]
+#ordered_averaged_common
+plot(averaged_common$Commonality, averaged_common$Composite.frequency)
+```
+```{r}
+linear.model <- lm(Composite.frequency ~ Commonality, data = core_words_all_chart)
+
+summary(linear.model)
+
+expanded_chart <- cbind(core_words_all_chart, log.freq = log(core_words_all_chart[ ,1]), com2 <- (core_words_all_chart[ ,3])^2, com3 <- (core_words_all_chart[ ,3])^3, com4 <- (core_words_all_chart[ ,3])^4)
+
+exp.model <- lm(log.freq ~ Commonality, data = expanded_chart)
+
+summary(exp.model)
+
+quad.model <- lm(Composite.frequency ~ com2 + Commonality, data = expanded_chart)
+
+summary(quad.model)
+
+cube.model <- lm(Composite.frequency ~ com3 + com2 + Commonality, data = expanded_chart)
+
+summary(cube.model)
+
+quad.model <- lm(Composite.frequency ~ com4 + com3 + com2 + Commonality, data = expanded_chart)
+
+summary(quad.model)
+```
+
+```{r}
+#Plot with exponential over it
+
+plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
+lines(seq(.3, 1, by=.05), exp(exp.model$coefficients[1]*seq(.3, 1, by=.05) + exp.model$coefficients[2]))
+
+plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
+lines(seq(.3, 1, by=.05), cube.model$coefficients[1]+cube.model$coefficients[2]*seq(.3, 1, by=.05)^3 +cube.model$coefficients[3]*seq(.3, 1, by=.05)^2+cube.model$coefficients[4]*seq(.3, 1, by=.05))
+#Definitely looks like over fitting
+```
+
+```{r}
+#Something smarter (disjoint)
+
+chop.point <- .98
+
+small_comm <- ordered_core_words_all[ordered_core_words_all[,3] < chop.point, ]
+small_comm_log <- cbind(small_comm, log.freq = log(small_comm$Composite.frequency))
+large_comm <- ordered_core_words_all[ordered_core_words_all[,3] >= chop.point, ]
+
+lower.line <- lm(log.freq ~ Commonality, data = small_comm_log)
+upper.point <- mean(large_comm$Composite.frequency)
+
+sqloss <- sum((small_comm$Composite.frequency-exp(lower.line$coefficients[1]*small_comm$Commonality + lower.line$coefficients[2]))^2)+sum((large_comm$Composite.frequency - upper.point)^2)
+
+plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
+lines(seq(.3, chop.point, by=.01), exp(lower.line$coefficients[1]*seq(.3, chop.point, by=.01) + lower.line$coefficients[2]))
+lines(seq(chop.point, 1, by=.01), seq(chop.point, 1, by=.01)*0+upper.point)
+
+sqloss
+```
+
+```{r}
+#Something smarter (spline)
+
+library(splines)
+
+chop.point <- .96
+
+spline.model <- lm(Composite.frequency ~ bs(Commonality, knots = c(.94, .98)), data = core_words_all_chart)
+
+pred <- predict(spline.model, newdata = list(Commonality = seq(.3, 1, by=.05)))
+
+plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
+lines(seq(.3, 1, by=.05), pred)
+
+summary(spline.model)
+
+```
+
+
+```{r}
+#Something smarter (spline)
+
+for (chop.point in seq(.8,.96, by = 0.01)) {
+
+  spline.model.2 <- lm(Composite.frequency ~ bs(Commonality, knots = c(chop.point, chop.point+.01, chop.point+.02), degree = 3), data = core_words_all_chart)
+
+  pred.2 <- predict(spline.model.2, newdata = list(Commonality = seq(.3, 1, by = .05)))
+
+  print(chop.point)
+
+  print(summary(spline.model.2)$adj.r.squared)
+
+}
+
+```
+
+```{r}
+smooth.model <- smooth.spline(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency, df = 7)
+
+plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
+lines(smooth.model)
+```
+
+```{r}
+
+smooth.model <- smooth.spline(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency, cv = FALSE)
+
+plot(ordered_core_words_all$Commonality, ordered_core_words_all$Composite.frequency)
+lines(smooth.model)
+
+```
+
 
 ```{r}
 #Lower bound on frequency
@@ -547,3 +664,222 @@ num_all*common_level/total_words_all*1000
 
 ```
 
+```{r}
+#Creating a table with notice of core words & commonality for later
+length_of_vects <- length(colnames(cleaned_freq_all))
+
+vec_core_4 <- vector(mode = "character", length = length_of_vects)
+vec_core_5 <- vector(mode = "character", length = length_of_vects)
+vec_core_6 <- vector(mode = "character", length = length_of_vects)
+running_count <- vector(mode = "numeric", length = length_of_vects)
+  
+ii <- 0
+
+for (name in colnames(cleaned_freq_all)) {
+  ii <- ii + 1
+  ifelse(any(row.names(core_words_4_chart) == name), vec_core_4[ii] <- "x", vec_core_4[ii] <- "")
+  ifelse(any(row.names(core_words_5_chart) == name), vec_core_5[ii] <- "x", vec_core_5[ii] <- "")
+  ifelse(any(row.names(core_words_6_chart) == name), vec_core_6[ii] <- "x", vec_core_6[ii] <- "")
+}
+
+total_frequency <- colSums(cleaned_freq_all)
+
+total_commonality <- colSums(1*(cleaned_freq_all > 0))
+
+core_words_check <- data.frame('4 Year Olds' = vec_core_4, '5 Year Olds' = vec_core_5, '6 Year Olds' = vec_core_6, 'Composite frequency' = colSums(cleaned_freq_all), 'Relative frequency per 1000 words' =  colSums(cleaned_freq_all)/(sum(colSums(cleaned_freq_all)))*1000, 'Commonality' = colSums(1*(cleaned_freq_all > 0))/(num_all))
+
+row.names(core_words_check) <- colnames(cleaned_freq_all)
+
+core_words_check <- core_words_check[order(core_words_check$Composite.frequency, decreasing = TRUE), ]
+
+check_if_any_core <- function(x){
+  any(x == "x")
+}
+
+core_words_check_noblanks <- core_words_check[apply(core_words_check, MARGIN = 1, check_if_any_core), ]
+
+core_words_check_noblanks
+```
+
+```{r}
+#Creating a table with commonality for any word considered core for a group
+
+common_4 <- vector(mode = "numeric", length = length(row.names(core_words_check_noblanks)))
+common_5 <- vector(mode = "numeric", length = length(row.names(core_words_check_noblanks)))
+common_6 <- vector(mode = "numeric", length = length(row.names(core_words_check_noblanks)))
+
+ii <- 0
+for (name in row.names(core_words_check_noblanks)) {
+  ii <- ii + 1
+  common_4[ii] <- sum(1*(cleaned_freq_4[, colnames(cleaned_freq_4) == name] > 0))/num_4
+  common_5[ii] <- sum(1*(cleaned_freq_5[, colnames(cleaned_freq_5) == name] > 0))/num_5
+  common_6[ii] <- sum(1*(cleaned_freq_6[, colnames(cleaned_freq_6) == name] > 0))/num_6
+}
+
+common_compare <- data.frame(common_4, common_5, common_6)
+
+row.names(common_compare) <- row.names(core_words_check_noblanks)
+
+common_compare[1:5,]
+```
+
+```{r}
+#Computing if significant difference in any core words
+
+
+#Difference in proportions 4 vs 5
+
+prop_4_5 <- vector(mode = "numeric", length = length(row.names(common_compare)))
+
+for (index_prop_4_5 in (1:length(row.names(common_compare)))) {
+  if (common_compare[index_prop_4_5,1] == common_compare[index_prop_4_5,2]) {
+    prop_4_5[index_prop_4_5] <- 1
+  } else{
+  the.test <- prop.test(n = c(num_4, num_5), x = c(common_compare[index_prop_4_5,1]*num_4, common_compare[index_prop_4_5,2]*num_5))
+  prop_4_5[index_prop_4_5] <- the.test$p.value
+  }
+}
+
+#Test if any are different with Bonferonni correction
+any(prop_4_5 < (.05/length(row.names(common_compare))) )
+common_compare[which(prop_4_5 < (.05/length(row.names(common_compare))) ), ]
+core_words_check_noblanks[which(prop_4_5 < (.05/length(row.names(common_compare))) ), ]
+
+
+
+
+#Difference in proportions 5 vs 6
+
+prop_5_6 <- vector(mode = "numeric", length = length(row.names(common_compare)))
+
+for (index_prop_5_6 in (1:length(row.names(common_compare)))) {
+  if (common_compare[index_prop_5_6,2] == common_compare[index_prop_5_6,3]) {
+    prop_5_6[index_prop_5_6] <- 1
+  } else{
+  the.test <- prop.test(n = c(num_5, num_6), x = c(common_compare[index_prop_5_6,2]*num_5, common_compare[index_prop_5_6,3]*num_6))
+  prop_5_6[index_prop_5_6] <- the.test$p.value
+  }
+}
+
+#Test if any are different with Bonferonni correction
+any(prop_5_6 < (.05/length(row.names(common_compare))) )
+common_compare[which(prop_5_6 < (.05/length(row.names(common_compare))) ), ]
+core_words_check_noblanks[which(prop_5_6 < (.05/length(row.names(common_compare))) ), ]
+
+
+
+
+#Difference in proportions 4 vs 6
+
+prop_4_6 <- vector(mode = "numeric", length = length(row.names(common_compare)))
+
+for (index_prop_4_6 in (1:length(row.names(common_compare)))) {
+  if (common_compare[index_prop_4_6,1] == common_compare[index_prop_4_6,3]) {
+    prop_4_6[index_prop_4_6] <- 1
+  } else{
+  the.test <- prop.test(n = c(num_4, num_6), x = c(common_compare[index_prop_4_6,1]*num_4, common_compare[index_prop_4_6,3]*num_6))
+  prop_4_6[index_prop_4_6] <- the.test$p.value
+  }
+}
+
+#Test if any are different with Bonferonni correction
+any(prop_4_6 < (.05/length(row.names(common_compare))) )
+common_compare[which(prop_4_6 < (.05/length(row.names(common_compare))) ), ]
+core_words_check_noblanks[which(prop_4_6 < (.05/length(row.names(common_compare))) ), ]
+prop_4_6[which(prop_4_6 < (.05/length(row.names(common_compare))) )]
+
+```
+
+```{r}
+
+
+```
+
+
+```{r}
+#Computing if significant difference in any core words (quite sure this is an equivalent test)
+
+
+#Difference in proportions 4 vs 5
+
+chi_4_5 <- vector(mode = "numeric", length = length(row.names(common_compare)))
+
+for (index_chi_4_5 in (1:length(row.names(common_compare)))) {
+  if (common_compare[index_chi_4_5,1] == common_compare[index_chi_4_5,2]) {
+    chi_4_5[index_chi_4_5] <- 1
+  } else{
+  the.table <- cbind(c(common_compare[index_chi_4_5,1]*num_4, common_compare[index_chi_4_5,2]*num_5), c(num_4 - common_compare[index_chi_4_5,1]*num_4, num_5 - common_compare[index_chi_4_5,2]*num_5))
+  chi_4_5[index_chi_4_5] <- chisq.test(the.table)$p.value
+  }
+}
+
+#Test if any are different with Bonferonni correction
+any(chi_4_5 < (.05/length(row.names(common_compare))) )
+common_compare[which(chi_4_5 < (.05/length(row.names(common_compare))) ), ]
+core_words_check_noblanks[which(chi_4_5 < (.05/length(row.names(common_compare))) ), ]
+
+
+
+
+#Difference in proportions 5 vs 6
+
+chi_5_6 <- vector(mode = "numeric", length = length(row.names(common_compare)))
+
+for (index_chi_5_6 in (1:length(row.names(common_compare)))) {
+  if (common_compare[index_chi_5_6,2] == common_compare[index_chi_5_6,3]) {
+    chi_5_6[index_chi_5_6] <- 1
+  } else{
+  the.table <- cbind(c(common_compare[index_chi_5_6,2]*num_5, common_compare[index_chi_5_6,3]*num_6), c(num_5 - common_compare[index_chi_5_6,2]*num_5, num_6 - common_compare[index_chi_5_6,3]*num_6))
+  chi_5_6[index_chi_5_6] <- chisq.test(the.table)$p.value
+  }
+}
+
+#Test if any are different with Bonferonni correction
+any(chi_5_6 < (.05/length(row.names(common_compare))) )
+common_compare[which(chi_5_6 < (.05/length(row.names(common_compare))) ), ]
+core_words_check_noblanks[which(chi_5_6 < (.05/length(row.names(common_compare))) ), ]
+
+
+
+
+#Difference in proportions 4 vs 6
+
+chi_4_6 <- vector(mode = "numeric", length = length(row.names(common_compare)))
+
+for (index_chi_4_6 in (1:length(row.names(common_compare)))) {
+  if (common_compare[index_chi_4_6,1] == common_compare[index_chi_4_6,3]) {
+    chi_4_6[index_chi_4_6] <- 1
+  } else{
+  the.table <- cbind(c(common_compare[index_chi_4_6,1]*num_4, common_compare[index_chi_4_6,3]*num_6), c(num_4 - common_compare[index_chi_4_6,1]*num_4, num_6 - common_compare[index_chi_4_6,3]*num_6))
+  chi_4_6[index_chi_4_6] <- chisq.test(the.table)$p.value
+  }
+}
+
+#Test if any are different with Bonferonni correction
+any(chi_4_6 < (.05/length(row.names(common_compare))) )
+common_compare[which(chi_4_6 < (.05/length(row.names(common_compare))) ), ]
+core_words_check_noblanks[which(chi_4_6 < (.05/length(row.names(common_compare))) ), ]
+chi_4_6[which(chi_4_6 < (.05/length(row.names(common_compare))) )]
+
+```
+```{r}
+#Extracting dataframes to excel
+
+library("xlsx")
+
+download_results <- TRUE
+
+if(download_results){
+  write.xlsx(ordered_core_words_4, file = "core_words_processed.xlsx",
+      sheetName = "Core Words for 4-year-olds")
+  write.xlsx(ordered_core_words_5, file = "core_words_processed.xlsx",
+      sheetName = "Core Words for 5-year-olds", append = TRUE)
+  write.xlsx(ordered_core_words_6, file = "core_words_processed.xlsx",
+      sheetName = "Core Words for 6-year-olds", append = TRUE)
+  write.xlsx(ordered_core_words_all, file = "core_words_processed.xlsx",
+      sheetName = "Core Words for Combined Group", append = TRUE)
+  write.xlsx(core_words_check_noblanks, file = "core_words_processed.xlsx",
+      sheetName = "Comparison of All Core Words", append = TRUE)
+}
+
+```
