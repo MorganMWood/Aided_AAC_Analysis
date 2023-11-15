@@ -37,46 +37,6 @@
 \makeatother
 \usepackage{xcolor}
 \usepackage[margin=1in]{geometry}
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\NormalTok}[1]{#1}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -93,7 +53,12 @@
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\setcounter{secnumdepth}{5}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{longtable}
+\usepackage{colortbl}
+\usepackage{array}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -101,134 +66,340 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={Aided AAC Analysis},
-  pdfauthor={Morgan Wood, Client: Hsiao-Ting Su},
+  pdftitle={Determining Core Words for Mandarin-Speaking Children},
+  pdfauthor={Written by: Morgan Wood; Client: Hsiao-Ting Su},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{Aided AAC Analysis}
-\author{Morgan Wood, Client: Hsiao-Ting Su}
-\date{2023-11-13}
+\title{Determining Core Words for Mandarin-Speaking Children}
+\author{Written by: Morgan Wood \and Client: Hsiao-Ting Su}
+\date{15 November, 2023}
 
 \begin{document}
 \maketitle
+\begin{abstract}
+This is my abstract paragraph 1. With details.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Resulting Matrix preview}
-\FunctionTok{print}\NormalTok{(cleaned\_freq\_4[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{])}
-\end{Highlighting}
-\end{Shaded}
+This is paragraph 2
+\end{abstract}
 
-\begin{verbatim}
-##       baby dora elsa hello kitty
-##  [1,]    0    0    1     0     0
-##  [2,]    0    0    1     0     0
-##  [3,]    0    0    0     0     0
-##  [4,]    0    0    0     0     0
-##  [5,]    0    0    0     0     0
-##  [6,]    0    2    0     0     0
-##  [7,]    0    0    0     0     0
-##  [8,]    0    0    0     0     0
-##  [9,]    0    0    0     0     0
-## [10,]    0    0    0     0     0
-\end{verbatim}
+\hypertarget{overview}{%
+\section{Overview}\label{overview}}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{print}\NormalTok{(cleaned\_freq\_5[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{])}
-\end{Highlighting}
-\end{Shaded}
+Determining core words for a set of individuals is an important first
+step in developing Aided Augmentative and Alternative Communication
+devices (Aided AAC) tailored for those individuals. Aided AAC are either
+electronic or non-electronic devices used as an alternative to
+traditional verbal communication. Examples of Aided AAC are
+communication boards or speech generating devices.
 
-\begin{verbatim}
-##       ， ，我們 ，沒辦法 、 …
-##  [1,]  0      0        0  0 0
-##  [2,]  0      0        1  0 0
-##  [3,]  0      0        0  0 0
-##  [4,]  0      0        0  0 0
-##  [5,]  0      0        0  0 0
-##  [6,]  0      1        0  0 0
-##  [7,]  0      0        0  0 0
-##  [8,]  0      0        0  0 0
-##  [9,]  0      0        0  0 0
-## [10,]  0      0        0  0 0
-\end{verbatim}
+The goal of this report is to display a set of potential core words for
+Mandarin speaking children between the ages of 4 and 6 to aid in the
+creation of Aided AAC for these individuals.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{print}\NormalTok{(cleaned\_freq\_6[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{])}
-\end{Highlighting}
-\end{Shaded}
+To determine core words, multiple text files containing transcribed
+stories told by children are deconstructed into a list of words. In our
+setting, a word can by a single Chinese character or multiple Chinese
+characters.
 
-\begin{verbatim}
-##       ， 0289 100 101 102
-##  [1,]  0    0   0   0   0
-##  [2,]  0    0   0   0   0
-##  [3,]  0    1   0   0   0
-##  [4,]  0    0   0   0   0
-##  [5,]  0    0   0   0   0
-##  [6,]  0    0   0   0   0
-##  [7,]  0    0   0   0   0
-##  [8,]  0    0   1   0   1
-##  [9,]  0    0   0   0   0
-## [10,]  0    0   0   0   0
-\end{verbatim}
+For this report, I consider four different groups of children each with
+\(n\) children within the group and a total number of \(w\) words
+spoken. The groups considered are listed below.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{print}\NormalTok{(cleaned\_freq\_all[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{10}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{])}
-\end{Highlighting}
-\end{Shaded}
+\begin{itemize}
+\item
+  All Children (Ages 4 through 6) (\(n\) = 127, \(w\) = 58773)
+\item
+  Children of Age 4 (\(n\) = 40, \(w\) = 17893)
+\item
+  Children of Age 5 (\(n\) = 50, \(w\) = 22787)
+\item
+  Children of Age 6 (\(n\) = 37, \(w\) = 18093)
+\end{itemize}
 
-\begin{verbatim}
-##       ， ，我們 ，沒辦法 、 …
-##  [1,]  0      0        0  0 0
-##  [2,]  0      0        0  0 0
-##  [3,]  0      0        0  0 0
-##  [4,]  0      0        0  0 0
-##  [5,]  0      0        0  0 0
-##  [6,]  0      0        0  0 0
-##  [7,]  0      0        0  0 0
-##  [8,]  0      0        0  0 0
-##  [9,]  0      0        0  0 0
-## [10,]  0      0        0  0 0
-\end{verbatim}
+For each group of children, two statistics are computed for each
+distinct word spoken. First, if a word is spoken by \(c\cdot100\%\) of
+children in the group, the word is assigned a commonality \(c\). The
+frequency that a word is spoken is also looked at. From this we can
+obtain a relative frequency \(r\) which will be the number of times per
+1000 words the word is spoken. The total frequency of each word is also
+reported.
 
-\hypertarget{abstract}{%
-\section{Abstract}\label{abstract}}
+Within this report, a word is considered core if at least 30\% of
+children spoke the word and the word is spoken with a relative frequency
+of at least 0.5 times per 1000 words. I refer to .3 as the commonality
+threshold and .5 as the frequency threshold.
 
-This is an R Markdown document. Markdown is a simple formatting syntax
-for authoring HTML, PDF, and MS Word documents. For more details on
-using R Markdown see \url{http://rmarkdown.rstudio.com}.
+\hypertarget{choice-of-commonality-and-frequency-threshold}{%
+\section{Choice of Commonality and Frequency
+Threshold}\label{choice-of-commonality-and-frequency-threshold}}
 
-When you click the \textbf{Knit} button a document will be generated
-that includes both content as well as the output of any embedded R code
-chunks within the document. You can embed an R code chunk like this:
+I begin this report with a comment on the choice of threshold for
+declaring a core word.
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{summary}\NormalTok{(cars)}
-\end{Highlighting}
-\end{Shaded}
+While commonality and frequency represent two different statistics of
+the data, they are related. For example, if a word has commonality
+\(1\), then this requires that each individual in the study spoke the
+word. This implies that the word is spoke with a cumulative frequency at
+least equal to the number of individuals \(n\). More generally, if a
+word has a commonality of \(c\), the relative frequency must be at least
 
-\begin{verbatim}
-##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00
-\end{verbatim}
+\[1000 \cdot\frac{c\cdot n}{w}\] where \(w\) is the total number of
+words spoken.
 
-\hypertarget{including-plots}{%
-\subsection{Including Plots}\label{including-plots}}
+In fact, if we require a commonality threshold of \(c=0.3\), this forces
+a relative frequency \(r\) of at least the following for each group.
 
-You can also embed plots, for example:
+\begin{itemize}
+\item
+  All Children (Ages 4 through 6): \(r \geq\) 0.6482569
+\item
+  Children of Age 4: \(r \geq\) 0.6706533
+\item
+  Children of Age 5: \(r \geq\) 0.6582701
+\item
+  Children of Age 6: \(r \geq\) 0.6134969
+\end{itemize}
 
-\includegraphics{Aided_AAC_Report_files/figure-latex/pressure-1.pdf}
+Thus, unless a frequency threshold is above the number above, this
+threshold will not play a role in choosing which words are considered
+core. If it is desired for frequency to play a role in selection core
+words, I suggest selecting a frequency threshold strictly larger than
+the values listed above.
 
-Note that the \texttt{echo\ =\ FALSE} parameter was added to the code
-chunk to prevent printing of the R code that generated the plot.
+Regardless of this, for the remainder of this report I continue with the
+commonality and frequency thresholds \(c=.3\) and \(r=.5\),
+respectively, because this was requested. This implies that core words
+were actually only chosen with the condition that the commonality was at
+least 30\%.
+
+\hypertarget{core-words}{%
+\section{Core Words}\label{core-words}}
+
+Below, I give a table that previews the first 6 core words for children
+in the combined group. The core words listed below are in order of
+decreasing frequency. In total, there were 122 core words identified.
+The complete list of core words can be found on GitHub in the excel file
+``core\_words\_processed.xlsx''\footnote{Link:
+  \url{https://github.com/smithmor/Aided_AAC_Analysis/blob/7cab44371c38a43652a1a81eacb7862b4a6128c9/core_words_processed.xlsx}}
+under the ``Core Words for Combined Group'' tab.
+
+\begin{longtable}{l|rrr}
+\caption*{
+{\large Preview of Core Words Across All Ages}
+} \\ 
+\toprule
+\multicolumn{1}{l}{} & Composite.frequency & Relative.frequency.per.1000.words & Commonality \\ 
+\midrule\addlinespace[2.5pt]
+我 & 2656 & 45.19 & 0.99 \\ 
+的 & 2437 & 41.46 & 0.99 \\ 
+個 & 1917 & 32.62 & 0.98 \\ 
+是 & 1507 & 25.64 & 0.98 \\ 
+有 & 1466 & 24.94 & 0.98 \\ 
+就 & 1165 & 19.82 & 0.96 \\ 
+\bottomrule
+\end{longtable}
+
+Similarly, core words for other groups can be found. Below is a preview
+of core words for 4-year-olds, 5-year-olds, and 6-year-olds, which had a
+total of 121, 125, and 126 core words identified, respectively. It is
+worth noting that the number of core words increase with each age group.
+This matches the intuition that older children will have a broader
+vocabulary. Also of interest is the observation that one child in the
+6-year-old group did not use the word ``我'' which corresponds to the
+English word ``I''.
+
+\begin{longtable}{l|rrr}
+\caption*{
+{\large Preview of Core Words for 4-Year-Olds}
+} \\ 
+\toprule
+\multicolumn{1}{l}{} & Composite.frequency & Relative.frequency.per.1000.words & Commonality \\ 
+\midrule\addlinespace[2.5pt]
+的 & 856 & 47.84 & 1 \\ 
+我 & 839 & 46.89 & 1 \\ 
+個 & 642 & 35.88 & 1 \\ 
+\bottomrule
+\end{longtable}
+\begin{longtable}{l|rrr}
+\caption*{
+{\large Preview of Core Words for 5-Year-Olds}
+} \\ 
+\toprule
+\multicolumn{1}{l}{} & Composite.frequency & Relative.frequency.per.1000.words & Commonality \\ 
+\midrule\addlinespace[2.5pt]
+我 & 960 & 42.13 & 1 \\ 
+的 & 910 & 39.94 & 1 \\ 
+個 & 734 & 32.21 & 1 \\ 
+\bottomrule
+\end{longtable}
+\begin{longtable}{l|rrr}
+\caption*{
+{\large Preview of Core Words for 6-Year-Olds}
+} \\ 
+\toprule
+\multicolumn{1}{l}{} & Composite.frequency & Relative.frequency.per.1000.words & Commonality \\ 
+\midrule\addlinespace[2.5pt]
+我 & 857 & 47.37 & 0.97 \\ 
+的 & 671 & 37.09 & 0.97 \\ 
+個 & 541 & 29.90 & 0.95 \\ 
+\bottomrule
+\end{longtable}
+
+The complete list of each of these charts can be found also in the excel
+file ``core\_words\_processed.xlsx'' under the corresponding ``Core
+Words for X-Year-Olds'' tab.
+
+\hypertarget{relationship-between-commonality-and-frequency}{%
+\section{Relationship Between Commonality and
+Frequency}\label{relationship-between-commonality-and-frequency}}
+
+Next, I explore the relationship between commonality and frequency. To
+provide one possible summary of this relationship, a smoothing spline
+was fit to the set of core words (as defined by the combined group).
+This can be found below. As expected, we see a generally increasing
+relationship. Graphically, we also see increased variability in the
+relationship as the commonality increases.
+
+\begin{center}\includegraphics{Aided_AAC_Report_files/figure-latex/unnamed-chunk-3-1} \end{center}
+
+The plot above can be used to summarize the relationship graphically as
+well as to predict the frequency of a core word given its commonality.
+
+Smoothing splines require choosing a parameter that controls the
+``wiggliness'' of the line. Here, I chose a parameter by choosing the
+curve that graphically best fit the data without appearing to overfit.
+However, the smoothing parameter can also be chosen using cross
+validation and results in a ``wigglier'' line that using intuition
+appears to me to suffer from over-fitting.
+
+Other potential models are explored in the Appendix. Namely, an
+exponential model is fit as well as a discontinuous piecewise function.
+These models have the advantage of having a fitted curve with a
+closed-form equation. However, they do not fit the shape of the data as
+well as the smoothing spline displayed above.
+
+Alternatively, a smoothed scatterplot is also presented in the Appendix.
+
+\hypertarget{core-words-between-different-age-groups}{%
+\section{Core Words Between Different Age
+Groups}\label{core-words-between-different-age-groups}}
+
+Next, we look to see if the commonality of possible core words change
+between different age groups. To do this, we consider all words that are
+determined to be a core word in the 4-year-old, 5-year-old, or
+6-year-old group. Below is a preview of a chart which catalogs the
+groups in which each word is classified as a core word. The complete
+charts can be found in the excel file ``core\_words\_processed.xlsx''
+under the ``Core Words Comparison'' tab.
+
+\begin{longtable}{l|lllrrr}
+\caption*{
+{\large Preview of Core Words for Different Age Groups}
+} \\ 
+\toprule
+\multicolumn{1}{l}{} & X4.Year.Olds & X5.Year.Olds & X6.Year.Olds & Composite.frequency & Relative.frequency.per.1000.words & Commonality \\ 
+\midrule\addlinespace[2.5pt]
+我 & x & x & x & 2656 & 45.19 & 0.99 \\ 
+的 & x & x & x & 2437 & 41.46 & 0.99 \\ 
+個 & x & x & x & 1917 & 32.62 & 0.98 \\ 
+是 & x & x & x & 1507 & 25.64 & 0.98 \\ 
+有 & x & x & x & 1466 & 24.94 & 0.98 \\ 
+就 & x & x & x & 1165 & 19.82 & 0.96 \\ 
+\bottomrule
+\end{longtable}
+
+In the above chart, if a word is considered core within a certain age
+group, this is represented with an ``x'' in the corresponding cell. This
+chart also includes the frequency and commonality in the combined group
+and orders each word by decreasing frequency.
+
+For each of the words considered core for any age group, we conduct a
+statistical test to see if the commonality of the word significantly
+differs between two different age groups. This is done though a z-test
+for the difference of proportions (or equivalently a chi-squared test
+for independence).
+
+After accounting for multiple tests using the Bonferroni correction, we
+find no significant difference between the commonality of any core word
+in the age group of 4 verses the age group of 5. Similarly, we find no
+significant difference between the age group of 5 and the age group of
+6.
+
+We do find a significant difference in the commonality of at least one
+word between the 4-year-old age group and the 6-year-old age group.
+Specifically, the word 她 is significantly more common in the 6-year-old
+age group than in the 4-year-old age group with a commonality of 62\%
+verses 13\%. This suggests that the core words between these two age
+groups are significantly different. Thus, there may be an advantage to
+creating different Aided AAC for 4-year-olds than for 6-year-olds if
+considering the commonality threshold of 0.3 and frequency threshold of
+0.5.
+
+\hypertarget{appendix-other-models-of-the-relationship-between-commonality-and-frequency}{%
+\section{Appendix: Other Models of the Relationship Between Commonality
+and
+Frequency}\label{appendix-other-models-of-the-relationship-between-commonality-and-frequency}}
+
+We begin with an alternative scatterplot representation that smooths the
+relationship by averaging the frequency of words with the same
+commonality.
+
+\begin{center}\includegraphics{Aided_AAC_Report_files/figure-latex/unnamed-chunk-6-1} \end{center}
+
+In addition to the smoothing spline presented in the main report, we
+also explored other models for the relationship between commonality and
+frequency. Below are plots corresponding to two other potential models
+followed by a brief discussion on each model.
+
+We first consider an exponential model. One advantage to this model is
+that the line of best fit can be expressed in a closed-form expression.
+In fact, fitting an exponential curve to the relationship between
+commonality and frequency we see can obtain the prediction
+
+\[\text{Estimated Frequency} = 50.46\cdot 18.88^{c}\] for a word with
+commonality \(c\). This curve is displayed below. Unfortunately, this
+curve, while easy to interpret, does not fit the shape of the
+relationship well.
+
+\begin{center}\includegraphics{Aided_AAC_Report_files/figure-latex/unnamed-chunk-7-1} \end{center}
+
+We next considered a piece-wise smooth model based on intuition. It is
+possible that words can be described as either ``very common'' or ``not
+very common''. The very common words can be thought of as the English
+equivalent of ``I'', ``is'', etc. The very common words correspond to
+the words on the far right-hand side of the scatterplots.
+
+These very common words appear to have a different distribution than the
+other words. For example, the variance in the very common words is much
+higher. There is also much less of a clear pattern. One possible
+hypothesis is that not very common words fit an exponential distribution
+while very common words are randomly distributed around some common
+average frequency.
+
+To fit a model using the above description, we must determine (1) a
+threshold for words being classified as very common, (2) an exponential
+model for the not very common words, and (3) an average frequency for
+very common words.
+
+Below is the curve that minimizes squared error which uses a threshold
+of 0.98 commonality. This model has the same benefit as the exponential
+model in that the relationship can be expressed in closed-form, while
+having a much closer fit to the true data.
+
+\[\text{Estimated Frequency} = \begin{cases} 36.22\cdot 22.02^{c} & \text{if } c\leq .98,\\  1682.57 & \text{if } c> .98, \end{cases}\]
+for a word with commonality \(c\).
+
+\begin{center}\includegraphics{Aided_AAC_Report_files/figure-latex/unnamed-chunk-8-1} \end{center}
+
+One potential drawback to the above curve is that the model performance
+is very sensitive to the choice of threshold. Also, words that have
+commonality either just to the left or the threshold or just to the
+right of the threshold will have drastically different estimates of
+frequency which is not ideal.
+
+Because of the drawbacks of the above models, I believe the smoothing
+spline given in the main report is a better choice for representing the
+relationship between commality and frequency.
 
 \end{document}
